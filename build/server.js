@@ -13,20 +13,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const config_1 = require("./config/config");
 const dotenv_1 = __importDefault(require("dotenv"));
+const morgan_1 = __importDefault(require("morgan"));
+// module imports
+const config_1 = require("./config/config");
+const logger_1 = __importDefault(require("./library/logger"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+// middlewares
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: false }));
+app.use((0, morgan_1.default)('tiny'));
+// routes
+app.get('/', (req, res, next) => {
+    res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
+});
 const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 // Connect to the database
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, config_1.config)();
         // starting the server once the connection is established
-        console.log(`Server Listening on localhost:${process.env.PORT}`);
+        logger_1.default.info(`Server started on port ${SERVER_PORT}`);
     }
     catch (error) {
-        console.log(error.message);
+        logger_1.default.error(error.message);
     }
 });
 startServer();

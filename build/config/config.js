@@ -16,19 +16,20 @@ exports.config = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 // import mongoose from "mongoose";
 const mongodb_1 = require("mongodb");
+const logger_1 = __importDefault(require("../library/logger"));
 dotenv_1.default.config();
 const MONGO_URL = process.env.MONGO_URL || ``;
-// creating a function to establish the database connection  to the server 
+// creating a function to establish the database connection  to the server
 const config = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const client = new mongodb_1.MongoClient(MONGO_URL);
         yield client.connect();
-        console.log(`Connected to the database...`);
+        logger_1.default.info(`Connected to the database...`);
         // return MongoDB client instance or use it for further db operations
         return client;
     }
     catch (error) {
-        console.log(`Failed to conect to the database: ${error.message}`);
+        logger_1.default.error(`Failed to conect to the database: ${error.message}`);
         process.exit(1);
     }
 });
