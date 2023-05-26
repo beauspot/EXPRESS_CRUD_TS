@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import compression from 'compression';
 import cookieprser from 'cookie-parser';
+import helmet from 'helmet';
+import xss from 'xss-clean';
 
 // module imports
 import { config } from './config/config';
@@ -18,13 +20,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
+app.use(compression());
+app.use(cookieprser());
+app.use(helmet());
+app.use(xss());
 app.use(
     cors({
         credentials: true
     })
 );
-app.use(compression());
-app.use(cookieprser());
 
 // routes
 app.get('/', (req: Request, res: Response, next: NextFunction) => {

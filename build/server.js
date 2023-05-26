@@ -18,6 +18,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const compression_1 = __importDefault(require("compression"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const helmet_1 = __importDefault(require("helmet"));
+const xss_clean_1 = __importDefault(require("xss-clean"));
 // module imports
 const config_1 = require("./config/config");
 const logger_1 = __importDefault(require("./library/logger"));
@@ -27,11 +29,13 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, morgan_1.default)('tiny'));
+app.use((0, compression_1.default)());
+app.use((0, cookie_parser_1.default)());
+app.use((0, helmet_1.default)());
+app.use((0, xss_clean_1.default)());
 app.use((0, cors_1.default)({
     credentials: true
 }));
-app.use((0, compression_1.default)());
-app.use((0, cookie_parser_1.default)());
 // routes
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
