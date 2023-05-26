@@ -5,11 +5,17 @@ interface UserPosts extends Document {
     completed: boolean;
     role: 'user' | 'admin';
     createdBy: Types.ObjectId;
+    author: Types.ObjectId;
+    timestamps: boolean;
 }
 
 const UserPostsSchema = new Schema<UserPosts>({
     // creating an association between the authentication model and the user posts
-
+    author: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "AuthenticateUser"
+    },
     taskname: {
         type: String,
         required: [true, 'Please input a task']
@@ -28,6 +34,8 @@ const UserPostsSchema = new Schema<UserPosts>({
         ref: 'User',
         required: true
     }
+}, {
+    timestamps: true
 });
 
-const UserPostModel = model<UserPosts>("UserPosts", UserPostsSchema);
+export const UserPostModel = model<UserPosts>('UserPosts', UserPostsSchema);

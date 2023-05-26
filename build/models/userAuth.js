@@ -1,14 +1,8 @@
-import { Schema, Document, Types, model } from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-interface UserAuthentication extends Document {
-    email: string;
-    username: string;
-    password: string;
-}
-
-const AuthenticateSchema = new Schema<UserAuthentication>({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserAuthSchema = void 0;
+const mongoose_1 = require("mongoose");
+const AuthenticateSchema = new mongoose_1.Schema({
     email: {
         type: String,
         required: [true, 'Please provide an email address.'],
@@ -32,13 +26,7 @@ const AuthenticateSchema = new Schema<UserAuthentication>({
         maxLength: 500
     }
 });
-
 // <========== Mongoose Middleware =========>
-
 // for the moment user registers
 // the password is ran through a bcrypt function
-
-
-
-
-export const UserAuthSchema = model<UserAuthentication>('AuthenticateUser', AuthenticateSchema);
+exports.UserAuthSchema = (0, mongoose_1.model)('AuthenticateUser', AuthenticateSchema);

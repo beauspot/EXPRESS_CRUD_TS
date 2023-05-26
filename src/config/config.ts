@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 import { MongoClient } from 'mongodb';
 import Logging from '../library/logger';
 
@@ -22,3 +22,13 @@ export const config = async () => {
         process.exit(1);
     }
 };
+
+
+export const configDB = async (url: string) => {
+    try {
+        await mongoose.connect(url);
+        console.info("Connected to the database!")
+    } catch (error) {
+        console.log(error);
+    }
+}

@@ -1,8 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserPostModel = void 0;
 const mongoose_1 = require("mongoose");
 const UserPostsSchema = new mongoose_1.Schema({
     // creating an association between the authentication model and the user posts
+    author: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: true,
+        ref: "AuthenticateUser"
+    },
     taskname: {
         type: String,
         required: [true, 'Please input a task']
@@ -21,5 +27,7 @@ const UserPostsSchema = new mongoose_1.Schema({
         ref: 'User',
         required: true
     }
+}, {
+    timestamps: true
 });
-const UserPostModel = (0, mongoose_1.model)("UserPosts", UserPostsSchema);
+exports.UserPostModel = (0, mongoose_1.model)('UserPosts', UserPostsSchema);

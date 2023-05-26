@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = void 0;
+exports.configDB = exports.config = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
-// import mongoose from "mongoose";
+const mongoose_1 = __importDefault(require("mongoose"));
 const mongodb_1 = require("mongodb");
 const logger_1 = __importDefault(require("../library/logger"));
 dotenv_1.default.config();
@@ -34,3 +34,13 @@ const config = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.config = config;
+const configDB = (url) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield mongoose_1.default.connect(url);
+        console.info("Connected to the database!");
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.configDB = configDB;
