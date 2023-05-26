@@ -1,6 +1,9 @@
 import { Schema, Document, Types, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface UserAuthentication extends Document {
     email: string;
@@ -37,8 +40,30 @@ const AuthenticateSchema = new Schema<UserAuthentication>({
 
 // for the moment user registers
 // the password is ran through a bcrypt function
+AuthenticateSchema.pre('save', async function (next): Promise<void> {
+    const user = this;
+    if (!user.isModified('password')) {
+        return next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+    next();
+});
 
+// Schema Instance Methods
+// generate the token to login
+AuthenticateSchema.methods.generateAuthToken = async function (): Promise<string> {
+    const user = this as UserAuthentication;
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET!);
+    return token;
+};
 
-
+// comparing the password hash aginst the password
+AuthenticateSchema.methods.validPassword = async function (password: string): Promise<boolean> {
+    const user = this as UserAuthentication;
+    const comparedPwd = await bcrypt.compare(password, user.password);
+    console.log(comparedPwd);
+    return comparedPwd;
+};
 
 export const UserAuthSchema = model<UserAuthentication>('AuthenticateUser', AuthenticateSchema);

@@ -9,33 +9,36 @@ interface UserPosts extends Document {
     timestamps: boolean;
 }
 
-const UserPostsSchema = new Schema<UserPosts>({
-    // creating an association between the authentication model and the user posts
-    author: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "AuthenticateUser"
+const UserPostsSchema = new Schema<UserPosts>(
+    {
+        // creating an association between the authentication model and the user posts
+        author: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'AuthenticateUser'
+        },
+        taskname: {
+            type: String,
+            required: [true, 'Please input a task']
+        },
+        completed: {
+            type: Boolean,
+            default: false
+        },
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            required: true
+        },
+        createdBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        }
     },
-    taskname: {
-        type: String,
-        required: [true, 'Please input a task']
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    role: {
-        type: String,
-        enum: ['user', 'admin'],
-        required: true
-    },
-    createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    {
+        timestamps: true
     }
-}, {
-    timestamps: true
-});
+);
 
 export const UserPostModel = model<UserPosts>('UserPosts', UserPostsSchema);

@@ -7,7 +7,7 @@ const UserPostsSchema = new mongoose_1.Schema({
     author: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: "AuthenticateUser"
+        ref: 'AuthenticateUser'
     },
     taskname: {
         type: String,
