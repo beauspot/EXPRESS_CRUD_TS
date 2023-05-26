@@ -1,8 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import cors from 'cors';
+import compression from 'compression';
+import cookieprser from 'cookie-parser';
 
 // module imports
 import { config } from './config/config';
@@ -16,6 +18,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
+app.use(
+    cors({
+        credentials: true
+    })
+);
+app.use(compression());
+app.use(cookieprser());
 
 // routes
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
@@ -30,9 +39,9 @@ const startServer = async () => {
     try {
         await config();
         // starting the server once the connection is established
-        Logging.info(`Server started on port ${SERVER_PORT}`);
-    } catch (error: any) {
-        Logging.error(error.message);
+        app.listen(SERVER_PORT, () => Logging.info(`Server started on port ${SERVER_PORT}`));
+    } catch (error) {
+        Logging.error(error);
     }
 };
 

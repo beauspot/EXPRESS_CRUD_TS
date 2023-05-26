@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
+const compression_1 = __importDefault(require("compression"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 // module imports
 const config_1 = require("./config/config");
 const logger_1 = __importDefault(require("./library/logger"));
@@ -24,6 +27,11 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, morgan_1.default)('tiny'));
+app.use((0, cors_1.default)({
+    credentials: true
+}));
+app.use((0, compression_1.default)());
+app.use((0, cookie_parser_1.default)());
 // routes
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
@@ -34,10 +42,10 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, config_1.config)();
         // starting the server once the connection is established
-        logger_1.default.info(`Server started on port ${SERVER_PORT}`);
+        app.listen(SERVER_PORT, () => logger_1.default.info(`Server started on port ${SERVER_PORT}`));
     }
     catch (error) {
-        logger_1.default.error(error.message);
+        logger_1.default.error(error);
     }
 });
 startServer();

@@ -17,8 +17,8 @@ export const config = async () => {
 
         // return MongoDB client instance or use it for further db operations
         return client;
-    } catch (error: any) {
-        Logging.error(`Failed to conect to the database: ${error.message}`);
+    } catch (error) {
+        Logging.error(`Failed to conect to the database: ${error}`);
         process.exit(1);
     }
 };

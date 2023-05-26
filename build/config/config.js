@@ -29,7 +29,7 @@ const config = () => __awaiter(void 0, void 0, void 0, function* () {
         return client;
     }
     catch (error) {
-        logger_1.default.error(`Failed to conect to the database: ${error.message}`);
+        logger_1.default.error(`Failed to conect to the database: ${error}`);
         process.exit(1);
     }
 });
