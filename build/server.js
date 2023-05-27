@@ -12,15 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-// import http from 'http';
+const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const morgan_1 = __importDefault(require("morgan"));
-const cors_1 = __importDefault(require("cors"));
+const xss_clean_1 = __importDefault(require("xss-clean"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_session_1 = __importDefault(require("express-session"));
 const compression_1 = __importDefault(require("compression"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const helmet_1 = __importDefault(require("helmet"));
-const xss_clean_1 = __importDefault(require("xss-clean"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
+const connect_mongodb_session_1 = __importDefault(require("connect-mongodb-session"));
+const express_1 = __importDefault(require("express"));
 // module imports
 const config_1 = require("./config/config");
 const logger_1 = __importDefault(require("./library/logger"));
@@ -35,17 +37,34 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, morgan_1.default)('tiny'));
 app.use((0, compression_1.default)());
 app.use((0, cookie_parser_1.default)());
+app.use((0, express_mongo_sanitize_1.default)());
 app.use((0, helmet_1.default)());
 app.use((0, xss_clean_1.default)());
 app.use((0, cors_1.default)({
     credentials: true
+}));
+const MongoDBStore = (0, connect_mongodb_session_1.default)(express_session_1.default);
+const store = new MongoDBStore({
+    uri: process.env.MONGO_URL,
+    collection: 'Sessions-TS-Collection'
+});
+app.use((0, express_session_1.default)({
+    resave: false,
+    secret: process.env.SESSION_SECRET_KEY,
+    saveUninitialized: true,
+    store: store,
+    cookie: {
+        sameSite: 'strict',
+        secure: false,
+        maxAge: 1000 * 60 * 60 // cookie would expire in 1 hour
+    }
 }));
 // routes
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
 // middleware modules
-app.use("*", notfound_1.default);
+app.use('*', notfound_1.default);
 app.use(errorHandler_1.default);
 const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 // Connect to the database
@@ -60,8 +79,8 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 startServer();
-//Note 
+//Note
 /**
  * An import path can only end with a '.ts'
  * extension when 'allowImportingTsExtensions' is enabled.
- */ 
+ */
