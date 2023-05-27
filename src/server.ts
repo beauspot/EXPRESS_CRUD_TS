@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import http from 'http';
+// import http from 'http';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -11,6 +11,10 @@ import xss from 'xss-clean';
 // module imports
 import { config } from './config/config';
 import Logging from './library/logger';
+
+// Importing custom middlewares.
+import _404ErrorPage from "./middleware/notfound"; 
+import ErrorHandlerMiddleware from "./middleware/errorHandler";
 
 dotenv.config();
 
@@ -30,15 +34,23 @@ app.use(
     })
 );
 
+
+
+
 // routes
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
 
+
+
+// middleware modules
+app.use("*", _404ErrorPage);
+app.use(ErrorHandlerMiddleware)
+
 const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 
 // Connect to the database
-
 const startServer = async () => {
     try {
         await config();
@@ -50,3 +62,9 @@ const startServer = async () => {
 };
 
 startServer();
+
+//Note 
+/**
+ * An import path can only end with a '.ts' 
+ * extension when 'allowImportingTsExtensions' is enabled.
+ */

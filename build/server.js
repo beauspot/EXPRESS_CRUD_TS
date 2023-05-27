@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+// import http from 'http';
 const dotenv_1 = __importDefault(require("dotenv"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
@@ -23,6 +24,9 @@ const xss_clean_1 = __importDefault(require("xss-clean"));
 // module imports
 const config_1 = require("./config/config");
 const logger_1 = __importDefault(require("./library/logger"));
+// Importing custom middlewares.
+const notfound_1 = __importDefault(require("./middleware/notfound"));
+const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // middlewares
@@ -40,6 +44,9 @@ app.use((0, cors_1.default)({
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
+// middleware modules
+app.use("*", notfound_1.default);
+app.use(errorHandler_1.default);
 const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 // Connect to the database
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,3 +60,8 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 startServer();
+//Note 
+/**
+ * An import path can only end with a '.ts'
+ * extension when 'allowImportingTsExtensions' is enabled.
+ */ 
