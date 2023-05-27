@@ -12,11 +12,11 @@ interface UserPosts extends Document {
 const UserPostsSchema = new Schema<UserPosts>(
     {
         // creating an association between the authentication model and the user posts
-        author: {
+      /*   author: {
             type: Schema.Types.ObjectId,
             required: true,
             ref: 'AuthenticateUser'
-        },
+        }, */
         taskname: {
             type: String,
             required: [true, 'Please input a task']
@@ -25,16 +25,16 @@ const UserPostsSchema = new Schema<UserPosts>(
             type: Boolean,
             default: false
         },
-        role: {
+     /*    role: {
             type: String,
             enum: ['user', 'admin'],
             required: true
-        },
-        createdBy: {
+        }, */
+     /*    createdBy: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
-        }
+        } */
     },
     {
         timestamps: true

@@ -18,6 +18,9 @@ import Logging from './library/logger';
 import _404ErrorPage from './middleware/notfound';
 import ErrorHandlerMiddleware from './middleware/errorHandler';
 
+// importing the application route for registeration
+import taskRoute from './routes/taskRoutes';
+
 dotenv.config();
 
 const app = express();
@@ -55,6 +58,7 @@ app.use(
     })
 );
 // routes
+app.use('/', taskRoute);
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
