@@ -11,7 +11,8 @@ import MongodbSession from 'connect-mongodb-session';
 import express, { Request, Response, NextFunction } from 'express';
 
 // module imports
-import { config } from './config/config';
+
+import { configDB } from './config/config';
 import Logging from './library/logger';
 
 // Importing custom middlewares.
@@ -58,7 +59,7 @@ app.use(
     })
 );
 // routes
-app.use('/', taskRoute);
+app.use('/api/v2', taskRoute);
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
@@ -72,7 +73,7 @@ const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 // Connect to the database
 const startServer = async () => {
     try {
-        await config();
+        await configDB(process.env.MONGO_URL!);
         // starting the server once the connection is established
         app.listen(SERVER_PORT, () => Logging.info(`Server started on port ${SERVER_PORT}`));
     } catch (error) {
