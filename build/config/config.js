@@ -12,35 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.configDB = exports.config = void 0;
+exports.configDB = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const mongodb_1 = require("mongodb");
 const logger_1 = __importDefault(require("../library/logger"));
 dotenv_1.default.config();
 const MONGO_URL = process.env.MONGO_URL || ``;
 // creating a function to establish the database connection  to the server
-const config = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const client = new mongodb_1.MongoClient(MONGO_URL);
-        yield client.connect();
-        logger_1.default.info(`Connected to the database...`);
-        // return MongoDB client instance or use it for further db operations
-        return client;
-    }
-    catch (error) {
-        logger_1.default.error(`Failed to conect to the database: ${error}`);
-        process.exit(1);
-    }
-});
-exports.config = config;
 const configDB = (url) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(url);
-        console.info("Connected to the database!");
+        logger_1.default.info('Connected to the database!');
     }
     catch (error) {
-        console.log(error);
+        logger_1.default.error(error);
+        process.exit(1);
     }
 });
 exports.configDB = configDB;
