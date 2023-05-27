@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserAuthSchema = void 0;
 const mongoose_1 = require("mongoose");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -51,8 +51,8 @@ AuthenticateSchema.pre('save', function (next) {
         if (!user.isModified('password')) {
             return next();
         }
-        const salt = yield bcrypt_1.default.genSalt(10);
-        user.password = yield bcrypt_1.default.hash(user.password, salt);
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        user.password = yield bcryptjs_1.default.hash(user.password, salt);
         next();
     });
 });
@@ -69,7 +69,7 @@ AuthenticateSchema.methods.generateAuthToken = function () {
 AuthenticateSchema.methods.validPassword = function (password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;
-        const comparedPwd = yield bcrypt_1.default.compare(password, user.password);
+        const comparedPwd = yield bcryptjs_1.default.compare(password, user.password);
         console.log(comparedPwd);
         return comparedPwd;
     });
