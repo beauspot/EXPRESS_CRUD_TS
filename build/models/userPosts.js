@@ -6,7 +6,7 @@ const UserPostsSchema = new mongoose_1.Schema({
     // creating an association between the authentication model and the user posts
     author: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: true,
+        required: false,
         ref: 'AuthenticateUser'
     },
     taskname: {
@@ -20,14 +20,14 @@ const UserPostsSchema = new mongoose_1.Schema({
     role: {
         type: String,
         enum: ['user', 'admin'],
-        required: true
+        required: true,
+        default: 'user'
     },
     createdBy: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'AuthenticateUser',
     }
 }, {
     timestamps: true
 });
-exports.UserPostModel = (0, mongoose_1.model)('UserPosts', UserPostsSchema);
+exports.UserPostModel = (0, mongoose_1.model)('UserPosts1', UserPostsSchema);
