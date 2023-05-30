@@ -29,6 +29,8 @@ const logger_1 = __importDefault(require("./library/logger"));
 // Importing custom middlewares.
 const notfound_1 = __importDefault(require("./middleware/notfound"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
+// importing the application route for registeration
+const taskRoutes_1 = __importDefault(require("./routes/taskRoutes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // middlewares
@@ -60,6 +62,7 @@ app.use((0, express_session_1.default)({
     }
 }));
 // routes
+app.use('/api/v2', taskRoutes_1.default);
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
@@ -70,7 +73,7 @@ const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 // Connect to the database
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, config_1.config)();
+        yield (0, config_1.configDB)(process.env.MONGO_URL);
         // starting the server once the connection is established
         app.listen(SERVER_PORT, () => logger_1.default.info(`Server started on port ${SERVER_PORT}`));
     }
