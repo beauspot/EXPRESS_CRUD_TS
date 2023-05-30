@@ -9,7 +9,7 @@ const MONGO_URL = process.env.MONGO_URL || ``;
 
 
 // creating a function to establish the database connection  to the server
-export const configDB = async (url: string) => {
+export const configDB = async (url: string):Promise<void> => {
     try {
         await mongoose.connect(url);
         Logging.info('Connected to the database!');
