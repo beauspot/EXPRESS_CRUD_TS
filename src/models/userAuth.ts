@@ -9,6 +9,8 @@ interface UserAuthentication extends Document {
     email: string;
     username: string;
     password: string;
+    generateAuthToken(): Promise<string>;
+    validPassword:(password: string) => Promise<boolean>;
 }
 
 const AuthenticateSchema = new Schema<UserAuthentication>({
