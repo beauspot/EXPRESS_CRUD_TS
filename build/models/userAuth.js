@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserAuthSchema = void 0;
+exports.UserAuthModel = void 0;
 const mongoose_1 = require("mongoose");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -74,4 +74,4 @@ AuthenticateSchema.methods.validPassword = function (password) {
         return comparedPwd;
     });
 };
-exports.UserAuthSchema = (0, mongoose_1.model)('AuthenticateUser', AuthenticateSchema);
+exports.UserAuthModel = (0, mongoose_1.model)('AuthenticateUser', AuthenticateSchema);

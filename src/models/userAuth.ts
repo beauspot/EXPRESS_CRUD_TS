@@ -66,4 +66,4 @@ AuthenticateSchema.methods.validPassword = async function (password: string): Pr
     return comparedPwd;
 };
 
-export const UserAuthSchema = model<UserAuthentication>('AuthenticateUser', AuthenticateSchema);
+export const UserAuthModel = model<UserAuthentication>('AuthenticateUser', AuthenticateSchema);
