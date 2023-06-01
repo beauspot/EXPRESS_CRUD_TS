@@ -21,8 +21,10 @@ dotenv_1.default.config();
 // user signup controller
 exports.SignUpUser = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const newUser = yield userAuth_1.UserAuthModel.create(Object.assign({}, req.body));
-    const userToken = newUser.generateAuthToken();
+    const userToken = yield newUser.generateAuthToken();
+    console.log(userToken);
     res.status(http_status_codes_1.StatusCodes.CREATED).json({ UserData: { username: newUser.username, token: userToken } });
+    return;
 }));
 // user Login Controller
 exports.LoginUser = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,15 +33,16 @@ exports.LoginUser = (0, express_async_handler_1.default)((req, res, next) => __a
         res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ errMessage: `All Fields Are Mandatory` });
         return;
     }
-    const UserExists = yield userAuth_1.UserAuthModel.findOne({ email });
-    if (UserExists) {
+    const UserExists = (yield userAuth_1.UserAuthModel.findOne({ email }));
+    if (!UserExists) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             errMessage: `The user with the email: ${email} is not registered`
         });
         return;
     }
     // comparing user password
-    const isMatch = yield userAuth_1.UserAuthModel.validPassword(password, UserExists.password);
+    const isMatch = yield UserExists.comparePassword(password);
+    console.log(isMatch); // this should return a boolean value.
     if (!isMatch) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             errMessage: `The user with the email: ${email} is not registered`
