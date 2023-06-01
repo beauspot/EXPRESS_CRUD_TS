@@ -5,12 +5,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-interface UserAuthentication extends Document {
+export interface UserAuthentication extends Document {
     email: string;
     username: string;
     password: string;
+    token: string;
     generateAuthToken(): Promise<string>;
-    validPassword:(password: string) => Promise<boolean>;
+    comparePassword: (password: string) => Promise<boolean>;
 }
 
 const AuthenticateSchema = new Schema<UserAuthentication>({
@@ -35,6 +36,9 @@ const AuthenticateSchema = new Schema<UserAuthentication>({
         required: true,
         minLength: 8,
         maxLength: 500
+    },
+    token: {
+        type: String
     }
 });
 
@@ -57,11 +61,13 @@ AuthenticateSchema.pre('save', async function (next): Promise<void> {
 AuthenticateSchema.methods.generateAuthToken = async function (): Promise<string> {
     const user = this as UserAuthentication;
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET!);
+    user.token = token; // save the token to the token field
+    await user.save(); // save the user instace to the database
     return token;
 };
 
 // comparing the password hash aginst the password
-AuthenticateSchema.methods.validPassword = async function (password: string): Promise<boolean> {
+AuthenticateSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
     const user = this as UserAuthentication;
     const comparedPwd = await bcrypt.compare(password, user.password);
     console.log(comparedPwd);
