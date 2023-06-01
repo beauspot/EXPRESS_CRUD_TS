@@ -31,6 +31,7 @@ const notfound_1 = __importDefault(require("./middleware/notfound"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 // importing the application route for registeration
 const taskRoutes_1 = __importDefault(require("./routes/taskRoutes"));
+const userAuthRoute_1 = __importDefault(require("./routes/userAuthRoute"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // middlewares
@@ -63,6 +64,7 @@ app.use((0, express_session_1.default)({
 }));
 // routes
 app.use('/api/v2', taskRoutes_1.default);
+app.use('/api/v2', userAuthRoute_1.default);
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
