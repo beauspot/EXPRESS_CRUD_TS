@@ -9,7 +9,7 @@ dotenv.config();
 export const SignUpUser = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const newUser = await UserAuthModel.create({ ...req.body });
     const userToken = await newUser.generateAuthToken();
-    console.log(userToken);
+    console.log(userToken + ' ln 12');
     res.status(StatusCodes.CREATED).json({ UserData: { username: newUser.username, token: userToken } });
     return;
 });
@@ -34,7 +34,7 @@ export const LoginUser = asyncHandler(async (req: Request, res: Response, next: 
     // comparing user password
 
     const isMatch: boolean = await UserExists.comparePassword(password);
-    console.log(isMatch); // this should return a boolean value.
+    console.log(isMatch + ' ln 37'); // this should return a boolean value.
 
     if (!isMatch) {
         res.status(StatusCodes.UNAUTHORIZED).json({
@@ -43,7 +43,7 @@ export const LoginUser = asyncHandler(async (req: Request, res: Response, next: 
         return;
     }
 
-    const userToken = UserExists.generateAuthToken();
+    const userToken = await UserExists.generateAuthToken();
 
     res.status(StatusCodes.OK).json({ UserData: { username: UserExists.username, token: userToken } });
 });
