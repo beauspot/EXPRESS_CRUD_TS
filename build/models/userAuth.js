@@ -40,6 +40,9 @@ const AuthenticateSchema = new mongoose_1.Schema({
         required: true,
         minLength: 8,
         maxLength: 500
+    },
+    token: {
+        type: String
     }
 });
 // <========== Mongoose Middleware =========>
@@ -62,11 +65,13 @@ AuthenticateSchema.methods.generateAuthToken = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;
         const token = jsonwebtoken_1.default.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+        user.token = token; // save the token to the token field
+        yield user.save(); // save the user instace to the database
         return token;
     });
 };
 // comparing the password hash aginst the password
-AuthenticateSchema.methods.validPassword = function (password) {
+AuthenticateSchema.methods.comparePassword = function (password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;
         const comparedPwd = yield bcryptjs_1.default.compare(password, user.password);
