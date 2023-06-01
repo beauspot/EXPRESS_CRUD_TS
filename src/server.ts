@@ -21,6 +21,7 @@ import ErrorHandlerMiddleware from './middleware/errorHandler';
 
 // importing the application route for registeration
 import taskRoute from './routes/taskRoutes';
+import userAuthRoute from './routes/userAuthRoute';
 
 dotenv.config();
 
@@ -60,6 +61,7 @@ app.use(
 );
 // routes
 app.use('/api/v2', taskRoute);
+app.use('/api/v2', userAuthRoute);
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: 'Welcome to Esxpress REST API with Typescript.' });
 });
