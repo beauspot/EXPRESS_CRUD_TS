@@ -22,7 +22,7 @@ dotenv_1.default.config();
 exports.SignUpUser = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const newUser = yield userAuth_1.UserAuthModel.create(Object.assign({}, req.body));
     const userToken = yield newUser.generateAuthToken();
-    console.log(userToken);
+    console.log(userToken + ' ln 12');
     res.status(http_status_codes_1.StatusCodes.CREATED).json({ UserData: { username: newUser.username, token: userToken } });
     return;
 }));
@@ -42,13 +42,13 @@ exports.LoginUser = (0, express_async_handler_1.default)((req, res, next) => __a
     }
     // comparing user password
     const isMatch = yield UserExists.comparePassword(password);
-    console.log(isMatch); // this should return a boolean value.
+    console.log(isMatch + ' ln 37'); // this should return a boolean value.
     if (!isMatch) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             errMessage: `The user with the email: ${email} is not registered`
         });
         return;
     }
-    const userToken = UserExists.generateAuthToken();
+    const userToken = yield UserExists.generateAuthToken();
     res.status(http_status_codes_1.StatusCodes.OK).json({ UserData: { username: UserExists.username, token: userToken } });
 }));
