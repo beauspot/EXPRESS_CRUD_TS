@@ -63,6 +63,7 @@ AuthenticateSchema.pre('save', function (next) {
 // generate the token to login
 AuthenticateSchema.methods.generateAuthToken = function () {
     return __awaiter(this, void 0, void 0, function* () {
+        //@ts-ignore
         const user = this;
         const token = jsonwebtoken_1.default.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
         user.token = token; // save the token to the token field
@@ -73,10 +74,12 @@ AuthenticateSchema.methods.generateAuthToken = function () {
 // comparing the password hash aginst the password
 AuthenticateSchema.methods.comparePassword = function (password) {
     return __awaiter(this, void 0, void 0, function* () {
+        //@ts-ignore
         const user = this;
         const comparedPwd = yield bcryptjs_1.default.compare(password, user.password);
         console.log(comparedPwd);
         return comparedPwd;
     });
 };
+//@ts-ignore
 exports.UserAuthModel = (0, mongoose_1.model)('AuthenticateUser', AuthenticateSchema);

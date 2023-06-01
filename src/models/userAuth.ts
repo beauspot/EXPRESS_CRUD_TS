@@ -59,6 +59,7 @@ AuthenticateSchema.pre('save', async function (next): Promise<void> {
 // Schema Instance Methods
 // generate the token to login
 AuthenticateSchema.methods.generateAuthToken = async function (): Promise<string> {
+    //@ts-ignore
     const user = this as UserAuthentication;
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET!);
     user.token = token; // save the token to the token field
@@ -67,11 +68,14 @@ AuthenticateSchema.methods.generateAuthToken = async function (): Promise<string
 };
 
 // comparing the password hash aginst the password
+
 AuthenticateSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+    //@ts-ignore
     const user = this as UserAuthentication;
     const comparedPwd = await bcrypt.compare(password, user.password);
     console.log(comparedPwd);
     return comparedPwd;
 };
 
-export const UserAuthModel = model<UserAuthentication>('AuthenticateUser', AuthenticateSchema);
+//@ts-ignore
+export const UserAuthModel = model<UserAuthentication, userMethods>('AuthenticateUser', AuthenticateSchema);
