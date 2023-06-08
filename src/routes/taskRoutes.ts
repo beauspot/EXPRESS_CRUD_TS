@@ -1,7 +1,9 @@
 import express from 'express';
 import { getAllTasks, createTask, getASingleTask, updateASingleTask, deleteATask } from '../controllers/taskCtrls';
+import { authMiddleware } from '../middleware/authMiddleware';
 
 const taskRoute = express.Router();
+taskRoute.use(authMiddleware);
 
 taskRoute.get('/alltasks', getAllTasks);
 taskRoute.post('/createtask', createTask);
