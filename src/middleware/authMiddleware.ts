@@ -7,15 +7,27 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-interface AuthenticatedRequest extends Request {
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                userId: string;
+                name: string;
+                role: string;
+            };
+        }
+    }
+}
+
+/* interface AuthenticatedRequest extends Request {
     user: {
         userId: string;
         name: string;
         role: string;
     };
-}
+} */
 
-export const auth = asyncHandler(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authMiddleware = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // check header or url parameters or post parameters for token
     const authHeader = req.headers.authorization;
 
@@ -23,17 +35,21 @@ export const auth = asyncHandler(async (req: AuthenticatedRequest, res: Response
 
     const token = authHeader.split(' ')[1];
 
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
-        userId: string;
-        name: string;
-        role: string;
-    };
-    console.log(payload);
-    // attach the user request object
-    req.user = {
-        userId: payload.userId,
-        name: payload.name,
-        role: payload.role
-    };
-    next();
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
+            userId: string;
+            name: string;
+            role: string;
+        };
+        console.log(payload);
+        // attach the user request object
+        req.user = {
+            userId: payload.userId,
+            name: payload.name,
+            role: payload.role
+        };
+        next();
+    } catch (error) {
+        throw new UnauthenticatedError('InvalidToken', StatusCodes.UNAUTHORIZED);
+    }
 });
