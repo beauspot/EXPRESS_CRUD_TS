@@ -11,6 +11,12 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response, next
     res.status(StatusCodes.OK).json(tasks);
 });
 
+export const getAllTasksByUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const tasks = await UserPostModel.find({ createdBy: req.userId });
+    Logger.log(tasks);
+    res.status(StatusCodes.OK).json(tasks);
+});
+
 // creating a post task controller
 export const createTask = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const createTask = await UserPostModel.create(req.body);

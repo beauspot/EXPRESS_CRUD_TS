@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteATask = exports.updateASingleTask = exports.getASingleTask = exports.createTask = exports.getAllTasks = void 0;
+exports.deleteATask = exports.updateASingleTask = exports.getASingleTask = exports.createTask = exports.getAllTasksByUser = exports.getAllTasks = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const userPosts_1 = require("../models/userPosts");
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -20,6 +20,11 @@ const logger_1 = __importDefault(require("../library/logger"));
 // getting all tasks
 exports.getAllTasks = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const tasks = yield userPosts_1.UserPostModel.find();
+    logger_1.default.log(tasks);
+    res.status(http_status_codes_1.StatusCodes.OK).json(tasks);
+}));
+exports.getAllTasksByUser = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const tasks = yield userPosts_1.UserPostModel.find({ createdBy: req.userId });
     logger_1.default.log(tasks);
     res.status(http_status_codes_1.StatusCodes.OK).json(tasks);
 }));
